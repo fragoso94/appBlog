@@ -1,11 +1,21 @@
-import React, { useContext} from 'react';
+import React, { useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, FlatList, Button, TouchableOpacity} from 'react-native';
 import {Context} from "../Context/BlogContext";
 import {Feather} from '@expo/vector-icons';
 
 const IndexScreen = ({navigation}) =>{
-    const {state, deleteBlogPost} = useContext(Context);
-
+    const {state, deleteBlogPost, getBlogPost} = useContext(Context);
+    useEffect( ()=>{
+        getBlogPost();
+        //agregar un escuchador de eventos para que cada que navege se ejecute la función
+        const listener = navigation.addListener('didFocus', ()=> {
+           getBlogPost();
+        });
+        //sirve para limpiar ele escuchado cuando no estemos dentro de la vista Indice
+        return() => {
+          listener.remove();
+        };
+    },[])
 
     return(
         <View>
